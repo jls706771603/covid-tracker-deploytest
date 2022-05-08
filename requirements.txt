@@ -2,7 +2,7 @@ geopandas
 pandas
 matplotlib.pyplot
 plotly.express
-streamlit
+
 base64
 folium
 streamlit_folium
@@ -11,3 +11,4 @@ datetime
 urllib
 urllib.request
 PIL
+streamlit
