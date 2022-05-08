@@ -25,7 +25,7 @@ defusedxml==0.7.1
 entrypoints==0.3
 et-xmlfile==1.1.0
 Fiona==1.8.13.post1
-folium==
+folium
 fonttools==4.25.0
 gcloud==0.18.3
 
@@ -117,7 +117,7 @@ Shapely==1.7.1
 six==1.15.0
 smmap==5.0.0
 streamlit==1.5.0
-streamlit-folium==0.4.0
+streamlit-folium
 tenacity==8.0.1
 terminado==0.9.4
 testpath==0.5.0
