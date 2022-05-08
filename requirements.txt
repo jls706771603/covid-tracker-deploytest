@@ -1,7 +1,6 @@
 geopandas
 pandas
 plotly.express
-base64
 folium
 pyrebase
 datetime
