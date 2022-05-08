@@ -23,21 +23,21 @@ st.set_page_config(
     page_title="COVID-19 Dashboard",
     page_icon=":bar_chart:",
     layout="centered",
-	initial_sidebar_state="expanded",
-	menu_items={
-         'About': "# Covid-19 Tracker V1.0"
-     }
+    initial_sidebar_state="expanded",
+    menu_items={
+        'About': "# Covid-19 Tracker V1.0"
+    }
 )
 
 firebaseConfig = {
-  "apiKey": "AIzaSyBYSwVwuuWe4ZxZpoNuCXWKWfmZXqWh9Lc",
-  "authDomain": "pandemic-tracker-1b4e2.firebaseapp.com",
-  "databaseURL": "https://pandemic-tracker-1b4e2-default-rtdb.firebaseio.com",
-  "projectId": "pandemic-tracker-1b4e2",
-  "storageBucket": "pandemic-tracker-1b4e2.appspot.com",
-  "messagingSenderId": "755928698748",
-  "appId": "1:755928698748:web:ecb56541688d390c905ef9",
-  "measurementId": "G-EZCGYK8FM2"
+    "apiKey": "AIzaSyBYSwVwuuWe4ZxZpoNuCXWKWfmZXqWh9Lc",
+    "authDomain": "pandemic-tracker-1b4e2.firebaseapp.com",
+    "databaseURL": "https://pandemic-tracker-1b4e2-default-rtdb.firebaseio.com",
+    "projectId": "pandemic-tracker-1b4e2",
+    "storageBucket": "pandemic-tracker-1b4e2.appspot.com",
+    "messagingSenderId": "755928698748",
+    "appId": "1:755928698748:web:ecb56541688d390c905ef9",
+    "measurementId": "G-EZCGYK8FM2"
 }
 
 firebase = pyrebase.initialize_app(firebaseConfig)
@@ -51,19 +51,23 @@ path_local_geo = "states.geojson"
 path_local_case = "us-states.csv"
 path_local_case = "trend.jpg"
 
+
 # TODO auto refresh; deploy on aws
 image = Image.open('trend.jpg')
 
 if st.sidebar.button("Click to refresh for latest data"):
-	urllib.request.urlretrieve("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv", "us-counties-recent.csv")
-	urllib.request.urlretrieve("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv", "us-states.csv")
+    url1 = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv"
+    url2 = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv"
 
-	# upload latest
-	storage.child("us-counties-recent.csv").put("us-counties-recent.csv")
-	storage.child("us-states.csv").put("us-states.csv")
+    #urllib.request.urlretrieve("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv", "us-counties-recent.csv")
+    #urllib.request.urlretrieve("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv", "us-states.csv")
 
-	storage.child(path_on_cloud_geo).download("", path_local_geo)
-	#storage.child(path_on_cloud_case).download("", path_local_case)
+    # upload latest
+    # storage.child("us-counties-recent.csv").put("us-counties-recent.csv")
+    # storage.child("us-states.csv").put("us-states.csv")
+
+    #storage.child(path_on_cloud_geo).download("", path_local_geo)
+    #storage.child(path_on_cloud_case).download("", path_local_case)
 
 # import data
 
@@ -72,7 +76,7 @@ if st.sidebar.button("Click to refresh for latest data"):
 #df.to_csv('test.csv', index=False)
 
 #df = pd.read_csv("test.csv")
-df1 = pd.read_csv("us-counties-recent.csv")
+df1 = pd.read_csv(url1)
 
 st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">', unsafe_allow_html=True)
 
@@ -99,7 +103,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.write(
-"""
+    """
 # COVID-19 Tracker
 
 Click the header of each column can sort the data. Try **Filters** on the left.
@@ -113,25 +117,25 @@ st.image(image, caption='Recent Trend in Washington, Illinois, California')
 
 #st.subheader("Case Overview")
 
-#st.dataframe(df1)
+# st.dataframe(df1)
 
 # filters
 
 st.sidebar.header("Filters:")
 
 state = st.sidebar.multiselect(
-"Select the State:",
-options=df1["state"].unique(),
-default="Washington"
+    "Select the State:",
+    options=df1["state"].unique(),
+    default="Washington"
 )
 
 df_state_selection = df1.query("state == @state")
 
 county = st.sidebar.multiselect(
-"Select the County:",
-options=df_state_selection["county"].unique(),
-default="King"
-#default=df_state_selection["county"].unique()
+    "Select the County:",
+    options=df_state_selection["county"].unique(),
+    default="King"
+    # default=df_state_selection["county"].unique()
 )
 
 
@@ -143,16 +147,16 @@ start_date = st.sidebar.date_input('Start date', yesterday)
 end_date = st.sidebar.date_input('End date', today)
 
 if start_date <= end_date:
-    st.sidebar.success('Start date: `%s`\n\nEnd date:`%s`' % (start_date, end_date))
+    st.sidebar.success('Start date: `%s`\n\nEnd date:`%s`' %
+                       (start_date, end_date))
 else:
     st.sidebar.error('Error: End date must fall after start date.')
 
-	
-	
 
 df_selection = df1.query("state == @state & county == @county")
 
-mask = (pd.to_datetime(df_selection['date']) >= pd.to_datetime(start_date)) & (pd.to_datetime(df_selection['date']) <= pd.to_datetime(end_date))
+mask = (pd.to_datetime(df_selection['date']) >= pd.to_datetime(start_date)) & (
+    pd.to_datetime(df_selection['date']) <= pd.to_datetime(end_date))
 
 df_selection = df_selection.loc[mask]
 
@@ -161,29 +165,32 @@ df_selection = df_selection.loc[mask]
 
 st.header("Filtered Cases")
 
-st.write('Data Dimension: ' + str(df_selection.shape[0]) + ' rows and ' + str(df_selection.shape[1]) + ' columns.')
+st.write('Data Dimension: ' +
+         str(df_selection.shape[0]) + ' rows and ' + str(df_selection.shape[1]) + ' columns.')
 
 st.dataframe(df_selection)
 
 # download csv
 
+
 def filedownload(df1):
-	csv = df1.to_csv(index=False)
-	b64 = base64.b64encode(csv.encode()).decode()
-	href = f'<a href="data:file/csv;base64,{b64}" download="cases.csv">Download CSV File</a>'
-	return href
-	
+    csv = df1.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="cases.csv">Download CSV File</a>'
+    return href
+
+
 st.markdown(filedownload(df_selection), unsafe_allow_html=True)
 
 # map
 
 state_geo = "states.geojson"
-state_data = pd.read_csv("us-states.csv")
+state_data = pd.read_csv(url2)
 
 choice = ["cases", "deaths"]
 choice_selected = st.selectbox("Select choice", choice)
 
-#state_data.isnull().values.any()
+# state_data.isnull().values.any()
 
 date_max = max(state_data['date'])
 
@@ -196,13 +203,13 @@ latest_state_data = state_data[state_data['date'] == date_max]
 
 #latest_state_data['deaths'] = latest_state_data['deaths'].astype('int').astype('str')
 
-m = folium.Map(location=[39,-98], zoom_start=4)
+m = folium.Map(location=[39, -98], zoom_start=4)
 
 folium.Choropleth(
     geo_data=state_geo,
     name="choropleth",
     data=latest_state_data,
-    columns=["fips", choice_selected],#, choice_selected],
+    columns=["fips", choice_selected],  # , choice_selected],
     key_on="feature.properties.STATEFP",
     fill_color="YlGn",
     fill_opacity=0.7,
@@ -211,20 +218,20 @@ folium.Choropleth(
 ).add_to(m)
 
 #folium.features.GeoJson('states.geojson', name="State", popup=folium.features.GeoJsonPopup(fields=["NAME"])).add_to(m)
-	
+
 folium.LayerControl().add_to(m)
-		
+
 folium_static(m, width=700, height=500)
 
 #
 #json1 = "county.geojson"
 #
 #m = folium.Map(location=[39,-98], zoom_start=4)
-#			   
+#
 ##choice = ["cases", "deaths"]
 ##choice_selected = st.selectbox("Select choice", choice)
 #
-#folium.Choropleth(
+# folium.Choropleth(
 #    geo_data=json1,
 #    name="choropleth",
 #    data=df1,
@@ -234,13 +241,13 @@ folium_static(m, width=700, height=500)
 #    fill_opacity=0.7,
 #    line_opacity=0.2,
 #    #legend_name=choice_selected
-#).add_to(m)
+# ).add_to(m)
 #
 #
-##folium.features.GeoJson('county.geojson',
+# folium.features.GeoJson('county.geojson',
 #	#name="County", popup=folium.features.GeoJsonPopup(fields=["COUNTY_STATE_NAME"])).add_to(m)
-#						
-#folium.LayerControl().add_to(m)
+#
+# folium.LayerControl().add_to(m)
 #
 #folium_static(m, width=800, height=500)
 #
