@@ -1,11 +1,8 @@
 geopandas
 pandas
-matplotlib.pyplot
 plotly.express
-click==4.0
 base64
 folium
-
 pyrebase
 datetime
 urllib
