@@ -97,8 +97,7 @@ pyproj==2.6.1.post1
 Pyrebase4==4.5.0
 pyrsistent==0.18.0
 python-dateutil==2.8.2
-python-jwt==2.0.1
-pytz==2021.3
+
 
 pywin32==302
 pywinpty==0.5.7
@@ -141,3 +140,4 @@ zipp==3.7.0
 GDAL==3.0.2
 pytz-deprecation-shim==0.1.0.post0
 python-jwt==2.0.1
+pytz==2021.3
