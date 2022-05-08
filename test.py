@@ -55,10 +55,15 @@ path_local_case = "trend.jpg"
 # TODO auto refresh; deploy on aws
 image = Image.open('trend.jpg')
 
-if st.sidebar.button("Click to refresh for latest data"):
-    url1 = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv"
-    url2 = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv"
+url1 = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv"
+url2 = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv"
 
+df1 = pd.read_csv(url1)
+state_data = pd.read_csv(url2)
+
+if st.sidebar.button("Click to refresh for latest data"):
+    df1 = pd.read_csv(url1)
+    state_data = pd.read_csv(url2)
     #urllib.request.urlretrieve("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv", "us-counties-recent.csv")
     #urllib.request.urlretrieve("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv", "us-states.csv")
 
@@ -69,14 +74,14 @@ if st.sidebar.button("Click to refresh for latest data"):
     #storage.child(path_on_cloud_geo).download("", path_local_geo)
     #storage.child(path_on_cloud_case).download("", path_local_case)
 
-# import data
+    # import data
 
-#df = pd.read_json("pandemic-tracker-1b4e2-default-rtdb-countyList-export.json")
+    #df = pd.read_json("pandemic-tracker-1b4e2-default-rtdb-countyList-export.json")
 
-#df.to_csv('test.csv', index=False)
+    #df.to_csv('test.csv', index=False)
 
-#df = pd.read_csv("test.csv")
-df1 = pd.read_csv(url1)
+    #df = pd.read_csv("test.csv")
+
 
 st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">', unsafe_allow_html=True)
 
@@ -185,7 +190,7 @@ st.markdown(filedownload(df_selection), unsafe_allow_html=True)
 # map
 
 state_geo = "states.geojson"
-state_data = pd.read_csv(url2)
+
 
 choice = ["cases", "deaths"]
 choice_selected = st.selectbox("Select choice", choice)
