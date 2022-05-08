@@ -11,4 +11,3 @@ datetime
 urllib
 urllib.request
 PIL
-streamlit
