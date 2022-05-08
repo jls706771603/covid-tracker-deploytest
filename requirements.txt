@@ -8,3 +8,4 @@ streamlit
 matplotlib
 streamlit_folium
 pyrebase4
+jwt
