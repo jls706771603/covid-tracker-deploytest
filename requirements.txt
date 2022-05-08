@@ -5,9 +5,10 @@ plotly.express
 
 base64
 folium
-streamlit_folium
+
 pyrebase
 datetime
 urllib
 urllib.request
 PIL
+streamlit
