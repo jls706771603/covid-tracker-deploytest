@@ -99,7 +99,7 @@ Pyrebase4==4.5.0
 
 
 
-pywin32==302
+
 pywinpty==0.5.7
 pyzmq==22.3.0
 qtconsole==5.1.1
@@ -143,3 +143,4 @@ python-jwt==2.0.1
 pytz==2021.3
 python-dateutil==2.8.2
 pyrsistent==0.18.0
+pywin32==302
