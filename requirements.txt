@@ -137,7 +137,7 @@ wheel==0.37.1
 widgetsnbextension==3.5.1
 wincertstore==0.2
 zipp==3.7.0
-GDAL==3.0.2
+
 pytz-deprecation-shim==0.1.0.post0
 python-jwt==2.0.1
 pytz==2021.3
