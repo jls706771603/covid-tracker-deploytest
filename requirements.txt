@@ -6,3 +6,4 @@ pyrebase
 datetime
 streamlit
 matplotlib
+streamlit_folium
