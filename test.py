@@ -9,6 +9,7 @@
 # import relevant packages
 #import geopandas as gpd
 import nltk
+nltk.download('punkt')
 
 #nltk.download()
 import pandas as pd
