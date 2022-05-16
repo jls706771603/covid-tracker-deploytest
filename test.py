@@ -3,9 +3,11 @@
 
 # In[14]:
 
+# ref: https://towardsdatascience.com/news-summary-app-with-python-2b1993cf64dd
+
 
 # import relevant packages
-import geopandas as gpd
+#import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
@@ -13,11 +15,13 @@ import streamlit as st
 import base64
 import folium
 from streamlit_folium import folium_static
-import pyrebase
+import pyrebase  # 4
 import datetime
 import urllib
 import urllib.request
 from PIL import Image
+#import os
+from app_functions import get_top_headlines
 
 st.set_page_config(
     page_title="COVID-19 Dashboard",
@@ -51,8 +55,6 @@ path_local_geo = "states.geojson"
 path_local_case = "us-states.csv"
 path_local_case = "trend.jpg"
 
-
-# TODO auto refresh; deploy on aws
 image = Image.open('trend.jpg')
 
 url1 = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties-recent.csv"
@@ -116,11 +118,14 @@ Click the header of each column can sort the data. Try **Filters** on the left.
 ***
 """)
 
+#col1, col2 = st.columns([3, 2])
+
 st.header("Case Overview")
 
 st.image(image, caption='Recent Trend in Washington, Illinois, California')
 
-#st.subheader("Case Overview")
+#col1.subheader("A wide column with a chart")
+# col1.line_chart(state_data[['date','cases']])
 
 # st.dataframe(df1)
 
@@ -140,7 +145,6 @@ county = st.sidebar.multiselect(
     "Select the County:",
     options=df_state_selection["county"].unique(),
     default="King"
-    # default=df_state_selection["county"].unique()
 )
 
 
@@ -165,6 +169,7 @@ mask = (pd.to_datetime(df_selection['date']) >= pd.to_datetime(start_date)) & (
 
 df_selection = df_selection.loc[mask]
 
+st.write('***')
 
 # filtered cases
 
@@ -172,7 +177,8 @@ st.header("Filtered Cases")
 
 st.write('Data Dimension: ' +
          str(df_selection.shape[0]) + ' rows and ' + str(df_selection.shape[1]) + ' columns.')
-
+st.write('By ' + str(today) +
+         ', the total number fo cases/deaths in selected area are shown below:')
 st.dataframe(df_selection)
 
 # download csv
@@ -186,11 +192,43 @@ def filedownload(df1):
 
 
 st.markdown(filedownload(df_selection), unsafe_allow_html=True)
+# not working when deployed to streamlit cloud
+
+# News
+
+API_KEY = 'a378fff4da9a4146be2616e28792acc5'
+
+st.header("News Center")
+
+sentences_count = 2
+
+category = st.selectbox('Search By Category:', options=[
+    'health', 'business', 'general', 'science', 'technology'], index=0)
+
+search_term = st.text_input('Enter Search Term:', 'covid')
+
+if not search_term:
+    summaries = []
+    st.write('Please enter a search term above.')
+else:
+    summaries = get_top_headlines(sentences_count,
+                                  apiKey=API_KEY,
+                                  sortBy='publishedAt',
+                                  country='us',
+                                  q=search_term,
+                                  category=category
+                                  )
+
+for i in range(len(summaries)):
+    st.title(summaries[i]['title'])
+    st.write(f"published at: {summaries[i]['publishedAt']}")
+    st.write(f"source: {summaries[i]['source']['name']}")
+    st.write(summaries[i]['summary'])
+
 
 # map
 
 state_geo = "states.geojson"
-
 
 choice = ["cases", "deaths"]
 choice_selected = st.selectbox("Select choice", choice)
@@ -214,7 +252,7 @@ folium.Choropleth(
     geo_data=state_geo,
     name="choropleth",
     data=latest_state_data,
-    columns=["fips", choice_selected],  # , choice_selected],
+    columns=["fips", choice_selected],
     key_on="feature.properties.STATEFP",
     fill_color="YlGn",
     fill_opacity=0.7,
@@ -222,38 +260,9 @@ folium.Choropleth(
     legend_name=choice_selected,
 ).add_to(m)
 
-#folium.features.GeoJson('states.geojson', name="State", popup=folium.features.GeoJsonPopup(fields=["NAME"])).add_to(m)
+folium.features.GeoJson('states.geojson', name="State",
+                        popup=folium.features.GeoJsonPopup(fields=["NAME"])).add_to(m)
 
 folium.LayerControl().add_to(m)
 
-folium_static(m, width=700, height=500)
-
-#
-#json1 = "county.geojson"
-#
-#m = folium.Map(location=[39,-98], zoom_start=4)
-#
-##choice = ["cases", "deaths"]
-##choice_selected = st.selectbox("Select choice", choice)
-#
-# folium.Choropleth(
-#    geo_data=json1,
-#    name="choropleth",
-#    data=df1,
-#    columns=["fips", "deaths"],#"GEOID",choice_selected],
-#    key_on="feature.properties.GEOID",
-#    fill_color="YlGn",
-#    fill_opacity=0.7,
-#    line_opacity=0.2,
-#    #legend_name=choice_selected
-# ).add_to(m)
-#
-#
-# folium.features.GeoJson('county.geojson',
-#	#name="County", popup=folium.features.GeoJsonPopup(fields=["COUNTY_STATE_NAME"])).add_to(m)
-#
-# folium.LayerControl().add_to(m)
-#
-#folium_static(m, width=800, height=500)
-#
-#
+folium_static(m)  # , width=700, height=500)
