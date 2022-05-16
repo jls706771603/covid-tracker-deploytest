@@ -3,7 +3,7 @@ pandas
 plotly.express
 folium
 datetime
-
+streamlit
 matplotlib
 streamlit_folium
 pyrebase4
