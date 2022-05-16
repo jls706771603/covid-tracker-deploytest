@@ -8,6 +8,9 @@
 
 # import relevant packages
 #import geopandas as gpd
+import nltk
+
+#nltk.download()
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
@@ -15,7 +18,7 @@ import streamlit as st
 import base64
 import folium
 from streamlit_folium import folium_static
-import pyrebase  # 4
+import pyrebase #4
 import datetime
 import urllib
 import urllib.request
@@ -125,7 +128,7 @@ st.header("Case Overview")
 st.image(image, caption='Recent Trend in Washington, Illinois, California')
 
 #col1.subheader("A wide column with a chart")
-# col1.line_chart(state_data[['date','cases']])
+#col1.line_chart(state_data[['date','cases']])
 
 # st.dataframe(df1)
 
@@ -177,19 +180,16 @@ st.header("Filtered Cases")
 
 st.write('Data Dimension: ' +
          str(df_selection.shape[0]) + ' rows and ' + str(df_selection.shape[1]) + ' columns.')
-st.write('By ' + str(today) +
-         ', the total number fo cases/deaths in selected area are shown below:')
+st.write('By ' + str(today) + ', the total number fo cases/deaths in selected area are shown below:')
 st.dataframe(df_selection)
 
 # download csv
-
 
 def filedownload(df1):
     csv = df1.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
     href = f'<a href="data:file/csv;base64,{b64}" download="cases.csv">Download CSV File</a>'
     return href
-
 
 st.markdown(filedownload(df_selection), unsafe_allow_html=True)
 # not working when deployed to streamlit cloud
@@ -202,22 +202,21 @@ st.header("News Center")
 
 sentences_count = 2
 
-category = st.selectbox('Search By Category:', options=[
-    'health', 'business', 'general', 'science', 'technology'], index=0)
+category = st.selectbox('Search By Category:', options=['health','business','general','science','technology'], index=0)
 
 search_term = st.text_input('Enter Search Term:', 'covid')
 
 if not search_term:
-    summaries = []
-    st.write('Please enter a search term above.')
+  summaries = []
+  st.write('Please enter a search term above.')
 else:
-    summaries = get_top_headlines(sentences_count,
-                                  apiKey=API_KEY,
-                                  sortBy='publishedAt',
-                                  country='us',
-                                  q=search_term,
-                                  category=category
-                                  )
+  summaries = get_top_headlines(sentences_count, 
+    apiKey=API_KEY,
+    sortBy='publishedAt',
+    country='us',
+    q=search_term,
+    category=category
+    )
 
 for i in range(len(summaries)):
     st.title(summaries[i]['title'])
@@ -260,9 +259,8 @@ folium.Choropleth(
     legend_name=choice_selected,
 ).add_to(m)
 
-folium.features.GeoJson('states.geojson', name="State",
-                        popup=folium.features.GeoJsonPopup(fields=["NAME"])).add_to(m)
+folium.features.GeoJson('states.geojson', name="State", popup=folium.features.GeoJsonPopup(fields=["NAME"])).add_to(m)
 
 folium.LayerControl().add_to(m)
 
-folium_static(m)  # , width=700, height=500)
+folium_static(m)#, width=700, height=500)
